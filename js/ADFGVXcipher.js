@@ -30,7 +30,7 @@ var ADFGVX =
 
 	encrypt: function()
 	{
-		var test = "Attack at onc";
+		var test = "Attack at once";
 		var encryptedText="";
 		var transpositionedText=[];
 
@@ -80,7 +80,68 @@ var ADFGVX =
 		this.print("Cyphered text is: " , transpositionedText);
 
 		//this.transpositionKey.sort();
+		return transpositionedText;
 
+	},
+
+	decrypt: function(transpositionedText, transpositionKey)
+	{
+		var tempTextObject = [];
+		for (var i = 0; i < transpositionedText.length; i++) {
+			if(i < transpositionKey.length)
+			{
+				for (var  transTextCount= 0;  transTextCount < transpositionedText.length;  transTextCount++) {
+					if(transpositionedText[transTextCount].key==transpositionKey[i])
+					{
+						tempTextObject[i] = transpositionedText[transTextCount];
+									console.log("transpositionedText[transpositionKey[i]]: " +transpositionedText[transTextCount].key);
+									break;
+					}
+				};
+				
+
+			}
+			else if(tempTextObject.length < transpositionedText.length)
+			{
+				i=0;
+			}
+		};
+
+		console.log(tempTextObject);
+
+		transpositionedText = tempTextObject; 
+
+		var joinedEncyrptedText = "";
+		var i=0;
+		while (transpositionedText[transpositionedText.length-1].text.length > 0) 
+		{
+			joinedEncyrptedText = joinedEncyrptedText + transpositionedText[i].text.substring(0,1);
+			transpositionedText[i].text = transpositionedText[i].text.substring(1);
+			console.log(joinedEncyrptedText);
+			i++;
+			if(i == transpositionedText.length)
+			{
+				i = 0;
+			}
+		};
+		var decryptedText="";
+		while (joinedEncyrptedText.length > 0) {
+			if(this.secretMixedAlphabet[this.ADFGVXPairs.indexOf(joinedEncyrptedText.substring(0,2))] === undefined)
+			{
+				break;
+			}
+			else
+			{
+
+				decryptedText = decryptedText + this.secretMixedAlphabet[this.ADFGVXPairs.indexOf(joinedEncyrptedText.substring(0,2))];
+				joinedEncyrptedText = joinedEncyrptedText.substring(2);
+				console.log("bla"+joinedEncyrptedText);
+
+			}
+			
+		};
+
+		console.log("Decyphered text is: " , decryptedText);
 	},
 
 	print:function(text, textKeyObject)
@@ -94,4 +155,5 @@ var ADFGVX =
 }
 
 ADFGVX.createPairs();
-ADFGVX.encrypt();
+ADFGVX.decrypt(ADFGVX.encrypt(), ADFGVX.transpositionKey);
+
